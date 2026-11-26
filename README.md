@@ -50,8 +50,10 @@ Register 10014 is specific to the Anker. On other devices, start with `-TcpOnly`
 If you know a valid input register for the device, you can test the full Modbus read too:
 
 ```powershell
-.\Test-ModbusPing.ps1 192.168.1.50 -UnitId 3 -Register 30001
+.\Test-ModbusPing.ps1 192.168.1.50 -UnitId 3 -Register 0
 ```
+
+`-Register` expects the raw protocol address, which starts at 0. Many manuals list input registers in 3xxxx notation, where `30001` usually means address `0`.
 
 A reply of `Modbus-fout 2 (Illegal data address)` means the connection works but the device doesn't have that register.
 

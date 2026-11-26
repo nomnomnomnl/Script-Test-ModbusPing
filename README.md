@@ -1,6 +1,6 @@
 # Test-ModbusPing
 
-A `ping`-style connectivity test for Modbus TCP devices, written in PowerShell.
+A `ping`-style connectivity test for Modbus TCP devices. It comes in two versions: PowerShell for Windows (`Test-ModbusPing.ps1`) and Python 3 for Linux (`modbus_ping.py`, see [Linux](#linux-debian-raspberry-pi-os-)).
 
 Each attempt opens a new TCP connection and reads one input register (function code 04). Every attempt prints one line showing the TCP connect time, the Modbus response time and the value it read. When the run ends, or after Ctrl+C, you get ping-style statistics.
 
@@ -97,3 +97,35 @@ Console output is in Dutch.
 | `0` | All attempts succeeded |
 | `1` | One or more attempts failed |
 | `2` | Invalid or conflicting port in `host:port` |
+
+## Linux (Debian, Raspberry Pi OS, …)
+
+`modbus_ping.py` works the same way as the PowerShell version and prints the same output and exit codes. It needs Python 3.6+ and nothing else; Debian and Raspberry Pi OS normally ship with Python 3.
+
+```bash
+chmod +x modbus_ping.py
+./modbus_ping.py 192.168.4.166                 # Anker, 4 attempts on port 502
+./modbus_ping.py 192.168.4.166:502 -t          # continuous until Ctrl+C
+./modbus_ping.py 192.168.1.50 --tcp-only       # other Modbus devices
+./modbus_ping.py 192.168.1.50 --unit-id 3 --register 0
+./modbus_ping.py -h                            # full help
+```
+
+The short options match the PowerShell aliases. The long ones are written in Linux style:
+
+| PowerShell | Python |
+|---|---|
+| `-Port` | second positional argument |
+| `-Count` / `-n` | `--count` / `-n` |
+| `-Continuous` / `-t` | `--continuous` / `-t` |
+| `-TimeoutMs` / `-w` | `--timeout-ms` / `-w` |
+| `-IntervalSeconds` / `-i` | `--interval` / `-i` |
+| `-UnitId` | `--unit-id` |
+| `-Register` | `--register` |
+| `-TcpOnly` | `--tcp-only` |
+
+To check the script itself (uses a fake Modbus server on localhost):
+
+```bash
+python3 test_modbus_ping.py
+```

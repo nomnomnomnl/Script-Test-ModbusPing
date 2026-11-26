@@ -28,6 +28,33 @@ If script execution is blocked, run:
 powershell -ExecutionPolicy Bypass -File .\Test-ModbusPing.ps1 192.168.4.166
 ```
 
+### Anker SOLIX Solarbank Max AC
+
+The defaults are set for this device, so all you need is its IP address:
+
+```powershell
+.\Test-ModbusPing.ps1 192.168.4.166
+```
+
+This reads input register 10014 (SOC, %) with unit ID 1, the same unit ID the Home Assistant integration uses. If you get a reply such as `reg 10014=87`, both the TCP connection and the Modbus communication are working.
+
+### Other Modbus devices
+
+Register 10014 is specific to the Anker. On other devices, start with `-TcpOnly`: it only checks that the Modbus port accepts connections and sends no Modbus request at all.
+
+```powershell
+.\Test-ModbusPing.ps1 192.168.1.50 -TcpOnly
+.\Test-ModbusPing.ps1 192.168.1.50:5020 -TcpOnly -t
+```
+
+If you know a valid input register for the device, you can test the full Modbus read too:
+
+```powershell
+.\Test-ModbusPing.ps1 192.168.1.50 -UnitId 3 -Register 30001
+```
+
+A reply of `Modbus-fout 2 (Illegal data address)` means the connection works but the device doesn't have that register.
+
 ### Parameters
 
 | Parameter | Alias | Default | Description |
